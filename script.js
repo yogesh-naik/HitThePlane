@@ -1,5 +1,5 @@
 let TotalShipsHit = 0;
-let AlienShips = 5;
+
 //Detect collision
 function collision($div1, $div2) {
   var x1 = $div1.offset().left;
@@ -26,24 +26,23 @@ function createAlienShip() {
   if ($('.Alien-ship').length == 0) {
     console.log("New alien ship created.")
     var $alien_ship = $("<div>", { "class": "Alien-ship" });
-    // sleep(2000);
-   
-    $alien_ship.css("left","30px");
+
+    $alien_ship.css("left", "30px");
     console.log($alien_ship.css);
     $(".battlefield").append($alien_ship);
     MoveFromLeftRight($alien_ship);
-  }else{
+  } else {
     MoveFromLeftRight($('.Alien-ship'));
   }
 
 }
 
+//Move alien ship from left- Right
 function MoveFromLeftRight($alien_ship) {
- 
+
   $alien_ship.css("transition-delay", "10s");
   $alien_ship.css("transition", "10s");
-  setTimeout(function (){$alien_ship.css("left", "600px")},500);
-  // $alien_ship.css("left", "600px");
+  setTimeout(function () { $alien_ship.css("left", "600px") }, 500);
 
 }
 //Function to call IF collision happens
@@ -53,16 +52,30 @@ function find() {
     console.log("Bullet hit ,ship destroyed");
     // $(".Alien-ship").animate({ 'height': 'toggle' });
     $(".Alien-ship").css("left", "30px");
-    $(".Alien-ship").remove();
+    $(".Alien-ship").remove();//Delete / destroy Alien ship
     TotalShipsHit++;
     console.log(TotalShipsHit);
-    //Create new Ship
-    createAlienShip();
+    $('.score').empty();
+    $('.score').append(`<h3>Score - ${TotalShipsHit}/5 </h3>`);
+
+    if (TotalShipsHit == 5) {
+      $('#winText').empty();
+      $('#winText').append(`<h1>YOU WIN !!SAVED THE WORLD FROM ALIENS</h1>`);
+    } else {
+      //Create new Ship
+      createAlienShip();
+    }
   } else {
     console.log("Damn it!Just missed!");
     //Create new bullet
     var $div = $("<div>", { "class": "bullets" });
     $(".ship").after($div);
+    setTimeout(function () { 
+      if($(".Alien-ship").css("left") == "600px"){
+        $('#winText').empty();
+        $('#winText').append(`<h1>YOU LOST</h1>`);
+      }
+    }, 500);
   }
 }
 
@@ -78,10 +91,10 @@ $("#btn-start").on('click', function (event) {
   }
 });
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
+// function sleep(milliseconds) {
+//   const date = Date.now();
+//   let currentDate = null;
+//   do {
+//     currentDate = Date.now();
+//   } while (currentDate - date < milliseconds);
+// }
