@@ -1,4 +1,5 @@
-
+let TotalShipsHit = 0;
+let AlienShips = 5;
 //Detect collision
 function collision($div1, $div2) {
   var x1 = $div1.offset().left;
@@ -19,15 +20,44 @@ function collision($div1, $div2) {
   return true;
 }
 
+//Method to create new Alein ship
+function createAlienShip() {
+
+  if ($('.Alien-ship').length == 0) {
+    console.log("New alien ship created.")
+    var $alien_ship = $("<div>", { "class": "Alien-ship" });
+    // sleep(2000);
+   
+    $alien_ship.css("left","30px");
+    console.log($alien_ship.css);
+    $(".battlefield").append($alien_ship);
+    MoveFromLeftRight($alien_ship);
+  }else{
+    MoveFromLeftRight($('.Alien-ship'));
+  }
+
+}
+
+function MoveFromLeftRight($alien_ship) {
+ 
+  $alien_ship.css("transition-delay", "10s");
+  $alien_ship.css("transition", "10s");
+  setTimeout(function (){$alien_ship.css("left", "600px")},500);
+  // $alien_ship.css("left", "600px");
+
+}
 //Function to call IF collision happens
 //Else it creates NEW Bullet to hit the target
 function find() {
   if (collision($('.Alien-ship'), $('.bullets'))) {
     console.log("Bullet hit ,ship destroyed");
-    $(".Alien-ship").animate({ 'height': 'toggle' });
-
+    // $(".Alien-ship").animate({ 'height': 'toggle' });
+    $(".Alien-ship").css("left", "30px");
+    $(".Alien-ship").remove();
+    TotalShipsHit++;
+    console.log(TotalShipsHit);
     //Create new Ship
-    setTimeout(createAlienShip, 300);
+    createAlienShip();
   } else {
     console.log("Damn it!Just missed!");
     //Create new bullet
@@ -39,6 +69,7 @@ function find() {
 
 //Click to hit plane
 $("#btn-start").on('click', function (event) {
+  console.log(TotalShipsHit);
   if (event) {
     console.log(event);
     $(".bullets").animate({ "top": "-=405px" }, "fast"); //fire bullet
@@ -47,8 +78,10 @@ $("#btn-start").on('click', function (event) {
   }
 });
 
-//Method to create new Alein ship
-function createAlienShip() {
-  var $div = $("<div>", { "class": "Alien-ship" });
-  $(".bullets").after($div);
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
